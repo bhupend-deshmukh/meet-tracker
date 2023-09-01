@@ -7,9 +7,9 @@
     <link
       rel="icon"
       type="image/x-icon"
-      href="https://merakilearn.org/favicon.png"
+      href="https://static-00.iconduck.com/assets.00/google-icon-2048x2048-czn3g8x8.png"
     />
-    <title>Meraki Attendance Record</title>
+    <title>Google Meet Extenstions</title>
     <script src="options.js"></script>
     <!-- <script src="background.js" defer></script> -->
     <link rel="stylesheet" href="background.css" />
@@ -18,55 +18,21 @@
   <body>
     <div class="card-popup"></div>
     <div class="container hoverme">
-      <!-- <div class=" pop">
-        <div class=" text">
-          <img class="logo-fix" src="./images/meraki.png" alt="" srcset="" />
-        </div>
-      </div> -->
       <div class="right-main table-sec">
         <h1>Meet Classes History</h1>
         <table id="customers">
           <tr>
-            <th>User Name</th>
-            <th>Meeting Title</th>
-            <th>Country</th>
+            <th>Title</th>
+            <th>Attendees</th>
+            <th>Start T</th>
+            <th>Durations</th>
           </tr>
           <tr>
-            <td>Alfreds Futterkiste</td>
-            <td>Maria Anders</td>
-            <td>Germany</td>
+            <td>NavGurukul B-1</td>
+            <td>0</td>
+            <td>1-9-2023</td>
+            <td>60s</td>
           </tr>
-          <!-- <tr>
-            <td>Berglunds snabbköp</td>
-            <td>Christina Berglund</td>
-            <td>Sweden</td>
-          </tr>
-          <tr>
-            <td>Centro comercial Moctezuma</td>
-            <td>Francisco Chang</td>
-            <td>Mexico</td>
-          </tr>
-          <tr>
-            <td>Ernst Handel</td>
-            <td>Roland Mendel</td>
-            <td>Austria</td>
-          </tr>
-          <tr>
-            <td>Island Trading</td>
-            <td>Helen Bennett</td>
-            <td>UK</td>
-          </tr>
-          <tr>
-            <td>Königlich Essen</td>
-            <td>Philip Cramer</td>
-            <td>Germany</td>
-          </tr>
-          <tr>
-            <td>Laughing Bacchus Winecellars</td>
-            <td>Yoshi Tannamuri</td>
-            
-            <td>Canada</td>
-          </tr> -->
         </table>
       </div>
     </div>
@@ -80,14 +46,232 @@
         </tr>
       </table>
     </div>
-    <!-- <button type="button" class="btn cancel" onclick="closePopup()">Close</button> -->
   </body>
   <script>
-
     window.addEventListener("message", (event) => {
       // if (event.origin != "https://meet.google.com") return;
       const data = JSON.parse(event.data);
-      console.log(data)
-    })
+      const localData = JSON.parse(localStorage.getItem("meetData"));
+      if (!localData) {
+        localStorage.setItem("meetData", JSON.stringify([data]));
+        showDetails();
+      } else {
+        localStorage.setItem("meetData", JSON.stringify([...localData, data]));
+        showDetails();
+      }
+    });
+
+    function showDetails() {
+      // document.getElementById("popup-handler").style.display = "none";
+      const localData = JSON.parse(localStorage.getItem("meetData"));
+      const TableD = document.getElementById("customers");
+      for (let index = 0; index < localData?.length; index++) {
+        // console.log(JSON.parse(localData[index]?.attendee_names));
+        let attendee_names = JSON.parse(localData[index]?.attendee_names);
+        console.log(attendee_names.length);
+        TableD.innerHTML += `
+          <tr onclick="openPopup(${index})">
+            <td>${localData[index]?.meeting_title}</td>
+            <td>${attendee_names.length}</td>
+            <td>${localData[index]?.meeting_time}</td>
+            <td>${localData[index]?.meet_duration}</td>
+          </tr>`;
+      }
+    }
+
+    // <td onclick="openPopup()">${attendee_names.length}</td>
+
+    showDetails();
+
+    // function openPopup(id) {
+
+    //   console.log(id, "this is id");
+    //   const localData = JSON.parse(localStorage.getItem("meetData"));
+    //   const attendee_names = JSON.parse(localData[id]?.attendee_names);
+
+    //   // Create the popup container
+    //   const popupContainer = document.createElement("div");
+    //   popupContainer.id = "popup";
+    //   popupContainer.classList.add("popup");
+
+    //   // Create the table element
+    //   const table = document.createElement("table");
+    //   table.id = "customers";
+
+    //   // Create the table headings (User Name and Email)
+    //   const tableHeader = document.createElement("thead");
+    //   tableHeader.innerHTML = `
+    //     <tr>
+    //         <th>User Name</th>
+    //         <th>Email</th>
+    //     </tr>
+    // `;
+
+    //   // Create the table body and add rows dynamically from attendee_names
+    //   const tableBody = document.createElement("tbody");
+    //   if (attendee_names && attendee_names.length > 0) {
+    //     attendee_names.forEach((attendee) => {
+    //       const row = document.createElement("tr");
+    //       row.innerHTML = `
+    //             <td>${attendee}</td>
+    //             <td>${attendee.email}</td>
+    //         `;
+    //       tableBody.appendChild(row);
+    //     });
+    //   } else {
+    //     // Handle the case when there are no attendees
+    //     const emptyRow = document.createElement("tr");
+    //     emptyRow.innerHTML = `
+    //         <td colspan="2">No attendees found</td>
+    //     `;
+    //     tableBody.appendChild(emptyRow);
+    //   }
+
+    //   // Append the table to the popup container
+    //   table.appendChild(tableHeader);
+    //   table.appendChild(tableBody);
+
+    //   // Create a close button for the popup
+    //   const closeButton = document.createElement("button");
+    //   closeButton.innerText = "Close";
+    //   closeButton.addEventListener("click", closePopup);
+
+    //   // Append the table and close button to the popup container
+    //   popupContainer.appendChild(table);
+    //   popupContainer.appendChild(closeButton);
+
+    //   // Add styling to the popup
+    //   popupContainer.style.position = "fixed";
+    //   popupContainer.style.top = "50%";
+    //   popupContainer.style.left = "50%";
+    //   popupContainer.style.transform = "translate(-50%, -50%)";
+    //   popupContainer.style.backgroundColor = "white";
+    //   popupContainer.style.padding = "20px";
+    //   popupContainer.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+    //   popupContainer.style.zIndex = "1000";
+    //   popupContainer.style.width = "30rem";
+    //   popupContainer.style.borderRadius = "10px";
+
+    //   // close button style
+    //   closeButton.style.backgroundColor = "red";
+    //   closeButton.style.color = "white";
+    //   closeButton.style.padding = "10px";
+    //   closeButton.style.borderRadius = "5px";
+    //   closeButton.style.border = "none";
+    //   closeButton.style.cursor = "pointer";
+    //   closeButton.style.marginTop = "20px"; // Change the margin as needed
+    //   closeButton.style.fontSize = "1rem"; // Change the font size as needed
+    //   closeButton.style.fontWeight = "bold"; // Change the font weight as needed
+
+    //   // Append the close button to the popup container
+    //   popupContainer.appendChild(closeButton);
+
+    //   // Append the popup to the body
+    //   document.body.appendChild(popupContainer);
+    // }
+    function openPopup(id) {
+      console.log(id, "this is id");
+      const localData = JSON.parse(localStorage.getItem("meetData"));
+      const attendee_names = JSON.parse(localData[id]?.attendee_names);
+
+      // Create the popup container
+      const popupContainer = document.createElement("div");
+      popupContainer.id = "popup";
+      popupContainer.classList.add("popup");
+
+      // Create the table container with a fixed height and overflow
+      const tableContainer = document.createElement("div");
+      tableContainer.style.height = "300px"; // Set the desired fixed height
+      tableContainer.style.overflowY = "scroll"; // Make the container vertically scrollable
+
+      const h2Element = document.createElement("h2");
+      h2Element.textContent = "Attendees"; // Set the desired text for the h2 tag
+      h2Element.style.textAlign = "center"; // Align the text to the center
+      // Append the h2 element to the table container
+      tableContainer.appendChild(h2Element);
+      // Create the table element
+      const table = document.createElement("table");
+      table.id = "customers";
+
+      // Create the table headings (User Name and Email)
+      const tableHeader = document.createElement("thead");
+      tableHeader.innerHTML = `
+        <tr>
+            <th>User Name</th>
+            <th>Email</th>
+        </tr>
+    `;
+
+      // Create the table body and add rows dynamically from attendee_names
+      const tableBody = document.createElement("tbody");
+      if (attendee_names && attendee_names.length > 0) {
+        attendee_names.forEach((attendee) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+                <td>${attendee}</td>
+                <td>${attendee.email}</td>
+            `;
+          tableBody.appendChild(row);
+        });
+      } else {
+        // Handle the case when there are no attendees
+        const emptyRow = document.createElement("tr");
+        emptyRow.innerHTML = `
+            <td colspan="2">No attendees found</td>
+        `;
+        tableBody.appendChild(emptyRow);
+      }
+
+      // Append the table to the table container
+      table.appendChild(tableHeader);
+      table.appendChild(tableBody);
+
+      // Append the table container to the popup container
+      tableContainer.appendChild(table);
+
+      // Create a close button for the popup
+      const closeButton = document.createElement("button");
+      closeButton.innerText = "Close";
+      closeButton.addEventListener("click", closePopup);
+
+      // Append the table container and close button to the popup container
+      popupContainer.appendChild(tableContainer);
+      popupContainer.appendChild(closeButton);
+
+      // Add styling to the popup
+      popupContainer.style.position = "fixed";
+      popupContainer.style.top = "50%";
+      popupContainer.style.left = "50%";
+      popupContainer.style.transform = "translate(-50%, -50%)";
+      popupContainer.style.backgroundColor = "white";
+      popupContainer.style.padding = "20px";
+      popupContainer.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+      popupContainer.style.zIndex = "1000";
+      popupContainer.style.width = "30rem";
+      popupContainer.style.borderRadius = "10px";
+
+      // Close button style
+      closeButton.style.backgroundColor = "red";
+      closeButton.style.color = "white";
+      closeButton.style.padding = "10px";
+      closeButton.style.borderRadius = "5px";
+      closeButton.style.border = "none";
+      closeButton.style.cursor = "pointer";
+      closeButton.style.marginTop = "20px"; // Change the margin as needed
+      closeButton.style.fontSize = "1rem"; // Change the font size as needed
+      closeButton.style.fontWeight = "bold"; // Change the font weight as needed
+
+      // Append the popup to the body
+      document.body.appendChild(popupContainer);
+    }
+
+    function closePopup() {
+      console.log("4444444444444444444444444444444");
+      const popupContainer = document.getElementById("popup");
+      if (popupContainer) {
+        // Remove the popup
+        popupContainer.remove();
+      }
+    }
   </script>
 </html>

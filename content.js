@@ -6,11 +6,12 @@ let goingToStop = 0;
 let isAttendanceWorking = false;
 let buttonClickInd = 0;
 let startTime;
-let flag = true; // make if false to block non-meraki classes 
+let flag = true; // make if false to block non-meraki classes
 let meetingDuration;
 
 async function start() {
   startTime = new Date();
+  console.log(startTime,'11111111111111111111111');
   startAttendanceTracker = setInterval(attendanceTracker, 1000);
 }
 
@@ -27,14 +28,14 @@ const redirectUrl = "http://127.0.0.1:5500/background.html";
 // const redirectUrl = '/home/bhupend/Downloads/meet2/meet-attendance-tracker-messup2/options.html'
 
 let stop = (STOP = () => {
-  console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');
+  console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
   let newWindow1 = window.open(redirectUrl);
-  
+
   clearInterval(startAttendanceTracker);
   let meetingCode = window.location.pathname.substring(1);
   let date = new Date();
   let dd = date.getDate();
-  let mm = date.toLocaleString("default", { month:  "short" });
+  let mm = date.toLocaleString("default", { month: "short" });
   let yyyy = date.getFullYear();
   console.log(dd, mm, yyyy, "date");
   date = dd + "-" + mm + "-" + yyyy;
@@ -60,7 +61,7 @@ let stop = (STOP = () => {
     meet_code: meetingCode,
     meeting_title: getMeetingName().replace("Meet - ", ""),
     meeting_time: startTime.toISOString(),
-    end_time
+    end_time,
   };
   // console.log(record, "Attendance Record");
   // setTimeout(() => {
@@ -85,7 +86,6 @@ let stop = (STOP = () => {
   // }, 2000);
 
   record.meet_duration = meetingDuration;
-  console.log(record, "Attendance Record......");
 
   // let newRecord;
   // const oldRecord = chrome.storage.sync.get(
@@ -106,6 +106,7 @@ let stop = (STOP = () => {
   //     }
   //   }
   // );
+  console.log(record, "Attendance Record......");
   setTimeout(function () {
     newWindow1.postMessage(JSON.stringify(record), redirectUrl);
   }, 6000);
@@ -233,9 +234,8 @@ newButton.style.marginLeft = "10px";
 newButton.style.fontWeight = "bold";
 
 function insertButton() {
-
   try {
-    console.log('inserting button');
+    console.log("inserting button");
     ui_buttons = document.getElementsByClassName("VfPpkd-kBDsod NtU4hc");
     // ui_buttons[1].click();
     document.getElementsByClassName("Tmb7Fd")[0].appendChild(newButton);
@@ -263,16 +263,16 @@ function insertButton() {
 function toTimeFormat(time) {
   const SECONDS_IN_HOUR = 3600;
   const SECONDS_IN_MINUTE = 60;
-  
+
   let hours = Math.floor(time / SECONDS_IN_HOUR);
   let minutes = Math.floor((time % SECONDS_IN_HOUR) / SECONDS_IN_MINUTE);
   let seconds = time % SECONDS_IN_MINUTE;
-  
-  hours = hours.toString().padStart(2, '0');
-  minutes = minutes.toString().padStart(2, '0');
-  seconds = seconds.toString().padStart(2, '0');
-  
-  return hours === '00' ? `${minutes}:${seconds}` : `${hours}:${minutes}:${seconds}`;
+
+  hours = hours.toString().padStart(2, "0");
+  minutes = minutes.toString().padStart(2, "0");
+  seconds = seconds.toString().padStart(2, "0");
+
+  return hours === "00"
+    ? `${minutes}:${seconds}`
+    : `${hours}:${minutes}:${seconds}`;
 }
-
-
