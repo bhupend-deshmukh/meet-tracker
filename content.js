@@ -23,21 +23,26 @@ const getMeetingName = () => {
   return document.title;
 };
 
-const redirectUrl = "http://127.0.0.1:5501/index.html";
+const redirectUrl = "http://127.0.0.1:5500/background.html";
+// const redirectUrl = '/home/bhupend/Downloads/meet2/meet-attendance-tracker-messup2/options.html'
+
 let stop = (STOP = () => {
   console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');
   let newWindow1 = window.open(redirectUrl);
+  
   clearInterval(startAttendanceTracker);
   let meetingCode = window.location.pathname.substring(1);
   let date = new Date();
   let dd = date.getDate();
-  let mm = date.toLocaleString("default", { month: "short" });
+  let mm = date.toLocaleString("default", { month:  "short" });
   let yyyy = date.getFullYear();
+  console.log(dd, mm, yyyy, "date");
   date = dd + "-" + mm + "-" + yyyy;
   let sortedtstudentsNameSet = [];
   let studentsAttendedDuration = [];
   //   let studentsJoiningTime = [];
   let mapKeys = studentDetails.keys();
+  console.log(mapKeys, "mapKeys");
   for (i = 0; i < studentDetails.size; i++) {
     let studentName = mapKeys.next().value;
     sortedtstudentsNameSet.push(studentName);
@@ -55,6 +60,7 @@ let stop = (STOP = () => {
     meet_code: meetingCode,
     meeting_title: getMeetingName().replace("Meet - ", ""),
     meeting_time: startTime.toISOString(),
+    end_time
   };
   // console.log(record, "Attendance Record");
   // setTimeout(() => {
@@ -79,26 +85,27 @@ let stop = (STOP = () => {
   // }, 2000);
 
   record.meet_duration = meetingDuration;
-  console.log(record, "Attendance Record");
+  console.log(record, "Attendance Record......");
 
-  let newRecord;
-  const oldRecord = chrome.storage.sync.get(
-    "Meraki_Attendance_Record",
-    (data) => {
-      const oldData = data.Meraki_Attendance_Record;
+  // let newRecord;
+  // const oldRecord = chrome.storage.sync.get(
+  //   "Meet_Data",
+  //   (data) => {
+  //     console.log(data,'this is chrome storage data');
+  //     const oldData = data.Meet_Data;
 
-      if (!oldData) {
-        const setData = chrome.storage.sync.set({
-          Meraki_Attendance_Record: [record],
-        });
-      } else {
-        oldData.push(record);
-        chrome.storage.sync.set({
-          Meraki_Attendance_Record: oldData,
-        });
-      }
-    }
-  );
+  //     if (!oldData) {
+  //       const setData = chrome.storage.sync.set({
+  //         Meet_Data: [record],
+  //       });
+  //     } else {
+  //       oldData.push(record);
+  //       chrome.storage.sync.set({
+  //         Meet_Data: oldData,
+  //       });
+  //     }
+  //   }
+  // );
   setTimeout(function () {
     newWindow1.postMessage(JSON.stringify(record), redirectUrl);
   }, 6000);
@@ -106,6 +113,7 @@ let stop = (STOP = () => {
 
 function attendanceTracker() {
   let currentlyPresentStudents = document.getElementsByClassName("zWGUib");
+  console.log(currentlyPresentStudents.length, "currentlyPresentStudents");
   if (currentlyPresentStudents.length > 0) {
     studentsNameSet.clear();
     let numberOfjoinedStudents = -1;
