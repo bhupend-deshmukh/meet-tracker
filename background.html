@@ -19,7 +19,7 @@
     <div class="card-popup"></div>
     <div class="container hoverme">
       <div class="right-main table-sec">
-        <h1>Meet Classes History</h1>
+        <h1>Google Meet History</h1>
         <table id="customers">
           <tr>
             <th>Title</th>
@@ -30,8 +30,8 @@
           <tr>
             <td>NavGurukul B-1</td>
             <td>0</td>
-            <td>1-9-2023</td>
-            <td>60s</td>
+            <td>2023-09-01T13:56:34.119Z</td>
+            <td>15:10</td>
           </tr>
         </table>
       </div>
@@ -51,6 +51,7 @@
     window.addEventListener("message", (event) => {
       // if (event.origin != "https://meet.google.com") return;
       const data = JSON.parse(event.data);
+      console.log(data,'rrrrrrrrrrrrrrrrrrrrrrrr');
       const localData = JSON.parse(localStorage.getItem("meetData"));
       if (!localData) {
         localStorage.setItem("meetData", JSON.stringify([data]));
@@ -83,97 +84,13 @@
 
     showDetails();
 
-    // function openPopup(id) {
-
-    //   console.log(id, "this is id");
-    //   const localData = JSON.parse(localStorage.getItem("meetData"));
-    //   const attendee_names = JSON.parse(localData[id]?.attendee_names);
-
-    //   // Create the popup container
-    //   const popupContainer = document.createElement("div");
-    //   popupContainer.id = "popup";
-    //   popupContainer.classList.add("popup");
-
-    //   // Create the table element
-    //   const table = document.createElement("table");
-    //   table.id = "customers";
-
-    //   // Create the table headings (User Name and Email)
-    //   const tableHeader = document.createElement("thead");
-    //   tableHeader.innerHTML = `
-    //     <tr>
-    //         <th>User Name</th>
-    //         <th>Email</th>
-    //     </tr>
-    // `;
-
-    //   // Create the table body and add rows dynamically from attendee_names
-    //   const tableBody = document.createElement("tbody");
-    //   if (attendee_names && attendee_names.length > 0) {
-    //     attendee_names.forEach((attendee) => {
-    //       const row = document.createElement("tr");
-    //       row.innerHTML = `
-    //             <td>${attendee}</td>
-    //             <td>${attendee.email}</td>
-    //         `;
-    //       tableBody.appendChild(row);
-    //     });
-    //   } else {
-    //     // Handle the case when there are no attendees
-    //     const emptyRow = document.createElement("tr");
-    //     emptyRow.innerHTML = `
-    //         <td colspan="2">No attendees found</td>
-    //     `;
-    //     tableBody.appendChild(emptyRow);
-    //   }
-
-    //   // Append the table to the popup container
-    //   table.appendChild(tableHeader);
-    //   table.appendChild(tableBody);
-
-    //   // Create a close button for the popup
-    //   const closeButton = document.createElement("button");
-    //   closeButton.innerText = "Close";
-    //   closeButton.addEventListener("click", closePopup);
-
-    //   // Append the table and close button to the popup container
-    //   popupContainer.appendChild(table);
-    //   popupContainer.appendChild(closeButton);
-
-    //   // Add styling to the popup
-    //   popupContainer.style.position = "fixed";
-    //   popupContainer.style.top = "50%";
-    //   popupContainer.style.left = "50%";
-    //   popupContainer.style.transform = "translate(-50%, -50%)";
-    //   popupContainer.style.backgroundColor = "white";
-    //   popupContainer.style.padding = "20px";
-    //   popupContainer.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
-    //   popupContainer.style.zIndex = "1000";
-    //   popupContainer.style.width = "30rem";
-    //   popupContainer.style.borderRadius = "10px";
-
-    //   // close button style
-    //   closeButton.style.backgroundColor = "red";
-    //   closeButton.style.color = "white";
-    //   closeButton.style.padding = "10px";
-    //   closeButton.style.borderRadius = "5px";
-    //   closeButton.style.border = "none";
-    //   closeButton.style.cursor = "pointer";
-    //   closeButton.style.marginTop = "20px"; // Change the margin as needed
-    //   closeButton.style.fontSize = "1rem"; // Change the font size as needed
-    //   closeButton.style.fontWeight = "bold"; // Change the font weight as needed
-
-    //   // Append the close button to the popup container
-    //   popupContainer.appendChild(closeButton);
-
-    //   // Append the popup to the body
-    //   document.body.appendChild(popupContainer);
-    // }
     function openPopup(id) {
       console.log(id, "this is id");
       const localData = JSON.parse(localStorage.getItem("meetData"));
+      console.log(localData);
       const attendee_names = JSON.parse(localData[id]?.attendee_names);
-
+      const profiles_url = JSON.parse(localData[id]?.profiles);
+      // console.log(profiles_url);
       // Create the popup container
       const popupContainer = document.createElement("div");
       popupContainer.id = "popup";
@@ -187,6 +104,7 @@
       const h2Element = document.createElement("h2");
       h2Element.textContent = "Attendees"; // Set the desired text for the h2 tag
       h2Element.style.textAlign = "center"; // Align the text to the center
+      h2Element.style.marginBottom = "20px"; // Change the margin as needed
       // Append the h2 element to the table container
       tableContainer.appendChild(h2Element);
       // Create the table element
@@ -197,19 +115,21 @@
       const tableHeader = document.createElement("thead");
       tableHeader.innerHTML = `
         <tr>
-            <th>User Name</th>
-            <th>Email</th>
+          <th>IND</th>
+          <th>USER NAME</th>
         </tr>
     `;
 
       // Create the table body and add rows dynamically from attendee_names
       const tableBody = document.createElement("tbody");
       if (attendee_names && attendee_names.length > 0) {
-        attendee_names.forEach((attendee) => {
+        attendee_names.forEach((attendee,ind) => {
           const row = document.createElement("tr");
           row.innerHTML = `
+          <td>
+              ${ind+1}
+          </td>
                 <td>${attendee}</td>
-                <td>${attendee.email}</td>
             `;
           tableBody.appendChild(row);
         });

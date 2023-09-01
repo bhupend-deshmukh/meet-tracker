@@ -8,6 +8,7 @@ let buttonClickInd = 0;
 let startTime;
 let flag = true; // make if false to block non-meraki classes
 let meetingDuration;
+let profileDetails = []
 
 async function start() {
   startTime = new Date();
@@ -56,6 +57,7 @@ let stop = (STOP = () => {
   }
   const end_time = new Date();
   var record = {
+    profiles: JSON.stringify(profileDetails),
     attendee_names: JSON.stringify(sortedtstudentsNameSet),
     attendedDurationInSec: JSON.stringify(studentsAttendedDuration),
     meet_code: meetingCode,
@@ -63,49 +65,8 @@ let stop = (STOP = () => {
     meeting_time: startTime.toISOString(),
     end_time,
   };
-  // console.log(record, "Attendance Record");
-  // setTimeout(() => {
-  //   const api = "http://localhost:5000/attendance"; // endpoint where this data will go
-
-  //   fetch(api, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(record),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((string) => {
-  //       console.log(`Title of our response :  ${string.title}`);
-  //       window.open(addon.extension.getURL("interface.html"));
-  //       // runtime.openOptionsPage()
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }, 2000);
-
   record.meet_duration = meetingDuration;
 
-  // let newRecord;
-  // const oldRecord = chrome.storage.sync.get(
-  //   "Meet_Data",
-  //   (data) => {
-  //     console.log(data,'this is chrome storage data');
-  //     const oldData = data.Meet_Data;
-
-  //     if (!oldData) {
-  //       const setData = chrome.storage.sync.set({
-  //         Meet_Data: [record],
-  //       });
-  //     } else {
-  //       oldData.push(record);
-  //       chrome.storage.sync.set({
-  //         Meet_Data: oldData,
-  //       });
-  //     }
-  //   }
-  // );
   console.log(record, "Attendance Record......");
   setTimeout(function () {
     newWindow1.postMessage(JSON.stringify(record), redirectUrl);
@@ -114,7 +75,18 @@ let stop = (STOP = () => {
 
 function attendanceTracker() {
   let currentlyPresentStudents = document.getElementsByClassName("zWGUib");
-  console.log(currentlyPresentStudents.length, "currentlyPresentStudents");
+  let profileData = document.getElementsByClassName("KjWwNd");
+  for(let profile of profileData) { 
+    let url = profile.attributes.src.value
+    console.log(url, 'url');
+    if(!profileDetails.includes(url)){
+      profileDetails.push(url)
+    }
+    // profileDetails.push(url.attributes.src.value)
+
+  }
+  // console.log(currentlyPresentStudents1,'pppppppppppppppppppppppppp');
+  // console.log(currentlyPresentStudents.length, "currentlyPresentStudents");
   if (currentlyPresentStudents.length > 0) {
     studentsNameSet.clear();
     let numberOfjoinedStudents = -1;
@@ -186,36 +158,6 @@ function attendanceTracker() {
   }
 }
 
-// async function merakiClassChecker(url) {
-//   const API_URL = "https://dev-api.navgurukul.org/classes";
-//   const token =
-//     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMxNjU1IiwiZW1haWwiOiJtYWhlbmRyYTIxQG5hdmd1cnVrdWwub3JnIiwiaWF0IjoxNjY5Nzg5MjQ4LCJleHAiOjE3MDEzNDY4NDh9.skpbASGKogaOAsngnD1P1tUHx8F0wLGC6uR2YLPXK5g";
-
-//   const data = await fetch(API_URL, {
-//     method: "GET",
-//     headers: {
-//       Accept: "application/json",
-//       Authorization: `Bearer ${token}`,
-//       "version-code": 99,
-//     },
-//   });
-//   const parsed_data = await data.json();
-//   for (let ind = 0; ind < parsed_data.length; ind++) {
-//     if (parsed_data[ind].meet_link === url) {
-//       flag = true;
-//       break;
-//     }
-//   }
-//   return flag;
-// }
-
-// let meet_url = window.location.href;
-// // const checked_url = merakiClassChecker(meet_url);
-// // checked_url.then((result) => {
-// //   if (result) {
-// //     // setInterval(insertButton, 1000);
-// //   }
-// // });
 setInterval(insertButton, 1000);
 
 // Adding button to meet ui

@@ -4,7 +4,7 @@
   "manifest_version": 3,
   "description": "This is a valuable tool to record Google Meet sessions and keep track of the attendance of the participants.",
   "icons": {
-    "128": "./images/meraki128.png"
+    "128": "./images/google-icon-2048x2048-czn3g8x8.png"
   },
   "background": {
     "service_worker": "background.js"
